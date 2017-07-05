@@ -1,0 +1,48 @@
+//afficher les message reçus
+#include <iostream>
+
+//socket
+#include <netdb.h>
+#include <netinet/in.h>
+//ecouter et recevoir en même temps
+#include <thread>
+#include <vector>
+
+#include <unistd.h>
+
+using namespace std;
+
+vector<int> clients(0,0);//les autres utilisateurs
+
+int main(){
+  SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+  if(sock == INVALID_SOCKET)
+    {
+      perror("socket()");
+      exit(errno);
+    }
+
+  SOCKADDR_IN sin = { 0 };
+
+  sin.sin_addr.s_addr = htonl(INADDR_ANY); /* nous sommes un serveur, nous acceptons n'importe quelle adresse */
+
+  sin.sin_family = AF_INET;
+
+  sin.sin_port = htons(PORT);
+
+  if(bind (sock, (SOCKADDR *) &sin, sizeof sin) == SOCKET_ERROR)
+    {
+      perror("bind()");
+      exit(errno);
+    }
+
+  if(listen(sock, 5) == SOCKET_ERROR)
+    {
+      perror("listen()");
+      exit(errno);
+    }
+
+  cout<<"fin"<<endl;
+}
+
+
